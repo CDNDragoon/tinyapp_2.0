@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/CDNDragoon/tinyapp_thesecond/issues"
   },
-  "homepage": "https://github.com/CDNDragoon/tinyapp_thesecond#readme"
+  "homepage": "https://github.com/CDNDragoon/tinyapp_thesecond#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
