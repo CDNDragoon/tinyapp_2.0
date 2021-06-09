@@ -1,4 +1,5 @@
 const express = require("express");
+const cookieParser = require("cookie-parser");
 const app = express();
 const PORT = 8080; // default port 8080
 const bodyParser = require("body-parser");
@@ -13,6 +14,8 @@ const GRS = function () {
   console.log(result);
   return result;
 };
+
+app.use(cookieParser());
 
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
@@ -41,8 +44,10 @@ app.get("/set", (req, res) => {
  });
 
  app.get("/urls", (req, res) => {
-  const templateVars = { urls: urlDatabase };
-  res.render("urls_index", templateVars);
+  console.log('req.cookies', req.cookies.username);
+
+  const templateVars = { urls: urlDatabase, username: req.cookies['username'] };
+  res.render('urls_index', templateVars)
 });
 
 app.get("/urls/new", (req, res) => {
@@ -64,8 +69,8 @@ app.post("/urls/:shortURL", (req, res) => {
 app.post("/urls", (req, res) => {
   let shortURL = GRS()    // Generate random string
   console.log(req.body);  // Log the POST request body to the console
-  urlDatabase[shortURL] = req.body
-  res.send(urlDatabase);         // Respond with entire database
+  urlDatabase[shortURL] = longURL;
+  res.redirect(`/urls/${shortURL}`);
 });
 
 app.get("/u/:shortURL", (req, res) => {
@@ -76,6 +81,22 @@ app.get("/u/:shortURL", (req, res) => {
 app.post("/urls/:shortURL/delete", (req, res) => {
   delete urlDatabase[req.params.shortURL]
   res.redirect('/urls')
+});
+
+app.get("/login", (req, res) => {
+  res.send('ok')
+});
+
+app.post("/login", (req, res) => {
+  const email = req.body.email
+  const password = req.body.password
+  const username = req.body.username
+  res.cookie('username', username)
+  res.redirect('/urls')
+});
+
+app.get("/test", (req, res) => {
+  res.send('Test working')
 });
 
 app.listen(PORT, () => {
