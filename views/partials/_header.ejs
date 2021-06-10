@@ -34,7 +34,9 @@
     </form>
     <% } else { %>
     <div>Welcome <%= username %>!</div>
-
+    <form method="POST" action="/logout">
+      <button type="submit" class="btn btn-outline-dark">Logout</button>
+    </form>
     <% } %>
   </nav>
 </header>
