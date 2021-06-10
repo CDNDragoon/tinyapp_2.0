@@ -62,7 +62,9 @@ app.get("/urls", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
+  let username = req.cookies["username"];
+  const templateVars = { username };
+  res.render("urls_new", templateVars);
 });
 
 app.get("/urls/:shortURL", (req, res) => {
@@ -83,7 +85,7 @@ app.post("/urls/:shortURL", (req, res) => {
 
 app.post("/urls", (req, res) => {
   let shortURL = GRS(); // Generate random string
-  urlDatabase[shortURL] = longURL;
+  urlDatabase[shortURL] = req.body.longURL//, username: req.cookies['username']} 
   res.redirect(`/urls/${shortURL}`);
 });
 
@@ -94,18 +96,6 @@ app.get("/u/:shortURL", (req, res) => {
 
 app.post("/urls/:shortURL/delete", (req, res) => {
   delete urlDatabase[req.params.shortURL];
-  res.redirect("/urls");
-});
-
-app.get("/login", (req, res) => {
-  res.send("ok");
-});
-
-app.post("/login", (req, res) => {
-  const email = req.body.email;
-  const password = req.body.password;
-  const username = req.body.username;
-  res.cookie("username", username);
   res.redirect("/urls");
 });
 
@@ -146,6 +136,50 @@ app.post("/register", (req, res) => {
     res.status(404);
     let code = 404;
     let message = `${email} is already registered`;
+    let username = req.cookies["username"];
+    const templateVars = { code, message, username };
+    res.render("urls_error", templateVars);
+  }
+});
+
+// app.post("/login", (req, res) => {
+//   const email = req.body.email;
+//   const password = req.body.password;
+//   const username = req.body.username;
+//   res.cookie("username", username);
+//   res.redirect("/urls");
+// });
+
+app.get("/login", (req, res) => {
+  let user = req.cookies["username"];
+  const templateVars = { username: user };
+  if (!user) {
+    res.render("urls_login", templateVars);
+  } else {
+    res.redirect("/urls");
+  }
+});
+
+app.post("/login", (req, res) => {
+  let email = req.body.email;
+  let password = req.body.password;
+  if (existingEmail(users, email)) {
+    if (checkPassword(users, email, password)) {
+      res.cookie("username", email);
+      res.redirect("/urls");
+      console.log(users);
+    } else {
+      res.status(400);
+      let code = 400;
+      let message = "password is incorrect";
+      let username = req.cookies["username"];
+      const templateVars = { code, message, username };
+      res.render("urls_error", templateVars);
+    }
+  } else {
+    res.status(404);
+    let code = 404;
+    let message = `${email} is not registered please register before login`;
     let username = req.cookies["username"];
     const templateVars = { code, message, username };
     res.render("urls_error", templateVars);
