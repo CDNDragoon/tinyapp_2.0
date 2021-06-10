@@ -5,14 +5,15 @@ const PORT = 8080; // default port 8080
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: true }));
 
+const {
+  GRS,
+  getUserByEmail,
+  existingEmail,
+  checkPassword,
+  filterDatabase,
+} = require("./helpers/helper");
+
 app.set("view engine", "ejs");
-
-// GRS = generate random string
-
-const GRS = function () {
-  let result = Math.random().toString(36).substring(3).slice(-6);
-  return result;
-};
 
 app.use(cookieParser());
 
@@ -31,7 +32,7 @@ const users = {
     id: "user2RandomID",
     email: "user2@example.com",
     password: "dishwasher-funk",
-  }
+  },
 };
 
 app.get("/", (req, res) => {
@@ -125,12 +126,21 @@ app.get("/register", (req, res) => {
 app.post("/register", (req, res) => {
   let email = req.body.email;
   let password = req.body.password;
-  let id = GRS();
-  let newUser = { id, email, password };
-  users[id] = newUser;
-  res.cookie("username", email);
-  res.redirect("/urls");
-  console.log(users)
+  if (email && password) {
+    let id = GRS();
+    let newUser = { id, email, password };
+    users[id] = newUser;
+    res.cookie("username", email);
+    res.redirect("/urls");
+    console.log(users);
+  } else {
+    res.status(400);
+    let code = 400;
+    let message = "username or password cannot be empty";
+    let username = req.cookies["username"];
+    const templateVars = { code, message, username };
+    res.render("urls_error", templateVars);
+  }
 });
 
 app.listen(PORT, () => {
