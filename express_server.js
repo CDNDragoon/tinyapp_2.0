@@ -126,17 +126,26 @@ app.get("/register", (req, res) => {
 app.post("/register", (req, res) => {
   let email = req.body.email;
   let password = req.body.password;
-  if (email && password) {
-    let id = GRS();
-    let newUser = { id, email, password };
-    users[id] = newUser;
-    res.cookie("username", email);
-    res.redirect("/urls");
-    console.log(users);
+  if (!existingEmail(users, email)) {
+    if (email && password) {
+      let id = GRS();
+      let newUser = { id, email, password };
+      users[id] = newUser;
+      res.cookie("username", email);
+      res.redirect("/urls");
+      console.log(users);
+    } else {
+      res.status(400);
+      let code = 400;
+      let message = "username or password cannot be empty";
+      let username = req.cookies["username"];
+      const templateVars = { code, message, username };
+      res.render("urls_error", templateVars);
+    }
   } else {
-    res.status(400);
-    let code = 400;
-    let message = "username or password cannot be empty";
+    res.status(404);
+    let code = 404;
+    let message = `${email} is already registered`;
     let username = req.cookies["username"];
     const templateVars = { code, message, username };
     res.render("urls_error", templateVars);
