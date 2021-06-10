@@ -44,8 +44,6 @@ app.get("/set", (req, res) => {
  });
 
  app.get("/urls", (req, res) => {
-  console.log('req.cookies', req.cookies.username);
-
   const templateVars = { urls: urlDatabase, username: req.cookies['username'] };
   res.render('urls_index', templateVars)
 });
