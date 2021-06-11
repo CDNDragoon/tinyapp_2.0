@@ -22,7 +22,7 @@
       <form action='/register' method='GET'><button type="submit" class="btn btn-outline-dark">Register</button></form>
         <form action='/login' method='GET'><button type="submit" class="btn btn-outline-dark">Login</button></form>
     <% } else { %>
-    <div>Welcome <%= username %>!</div>
+    <div>Welcome <%= username.email %>!</div>
     <form method="POST" action="/logout">
       <button type="submit" class="btn btn-outline-dark">Logout</button>
     </form>
