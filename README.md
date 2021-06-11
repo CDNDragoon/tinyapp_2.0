@@ -7,7 +7,7 @@
 !["Screenshot of main URLs page"](https://github.com/CDNDragoon/tinyapp/blob/main/screenshots/main.png)
 !["Screenshot of error URLs page"](https://github.com/CDNDragoon/tinyapp/blob/main/screenshots/error.png)
 !["Screenshot of edit URLs page"](https://github.com/CDNDragoon/tinyapp/blob/main/screenshots/edit.png)
-!["Screenshot of register URLs page"](https://github.com/CDNDragoon/tinyapp/blob/main/screenshots/register.png)
+!["Screenshot of register error URLs page"](https://github.com/CDNDragoon/tinyapp_2.0/blob/master/Screenshots/alreadyRegistered.png)
 
 ## Dependecies
 
